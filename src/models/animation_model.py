@@ -17,7 +17,7 @@ class Particle:
         self.repulsion_radius = 70  # Радиус отталкивания от мыши
 
     def update(self, mouse_x, mouse_y):
-        # Вычисление разницы между целью и фактическим положением
+        """Вычисление разницы между целью и фактическим положением"""
         ax = (self.target_x - self.x) * self.speed_factor
         ay = (self.target_y - self.y) * self.speed_factor
 
@@ -45,8 +45,8 @@ class AnimationModel:
         self.ensure_default_file()
         self.load_targets_from_txt()
 
-    # Функция чтения файла
     def ensure_default_file(self):
+        """Функция чтения файла"""
         # Если файла нет, закидываем шаблон - слово 'train'
         if not os.path.exists(self.file_path):
             default_pattern = (
@@ -59,8 +59,8 @@ class AnimationModel:
             with open(self.file_path, "w", encoding="utf-8") as f:
                 f.write(default_pattern)
 
-    # Функция загрузки частиц из файла
     def load_targets_from_txt(self):
+        """Функция загрузки частиц из файла"""
         with open(self.file_path, "r", encoding="utf-8") as f:
             lines = f.readlines()
 
