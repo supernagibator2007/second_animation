@@ -1,19 +1,21 @@
 class ParticleRenderer:
+    """Класс, отрисовывающий частицы"""
 
-  def __init__(self, canvas):
-    self.canvas = canvas
+    def __init__(self, canvas):
+        self.canvas = canvas
 
-  def render(self, particles):
-    self.canvas.delete("particle")
+    def render(self, particles):
+        """Отрисовка частиц"""
+        self.canvas.delete("particle")
 
-    radius = 3
-    for p in particles:
-      self.canvas.create_oval(
-          p.x - radius,
-          p.y - radius,
-          p.x + radius,
-          p.y + radius,
-          fill="#ffffff",
-          outline="",
-          tags="particle",
-      )
+        radius = 3
+        for p in particles:
+            self.canvas.create_oval(
+                p.x - radius,
+                p.y - radius,
+                p.x + radius,
+                p.y + radius,
+                fill="#ffffff",
+                outline="",
+                tags="particle",
+            )

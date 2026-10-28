@@ -4,6 +4,7 @@ import random
 
 
 class Particle:
+    """Класс одной частицы"""
 
     def __init__(self, target_x, target_y):
         self.x = random.randint(0, 800)
@@ -16,6 +17,7 @@ class Particle:
         self.repulsion_radius = 70  # Радиус отталкивания от мыши
 
     def update(self, mouse_x, mouse_y):
+        # Вычисление разницы между целью и фактическим положением
         ax = (self.target_x - self.x) * self.speed_factor
         ay = (self.target_y - self.y) * self.speed_factor
 
@@ -24,6 +26,7 @@ class Particle:
             dy = self.y - mouse_y
             distance = math.hypot(dx, dy)
 
+            # Отталкивание от курсора
             if distance < self.repulsion_radius and distance > 0:
                 force = self.repulsion_radius - distance
                 ax += (dx / distance) * force
@@ -34,44 +37,49 @@ class Particle:
 
 
 class AnimationModel:
+    """Класс, отвечающий за загрузку и обновление позиций частиц"""
 
-  def __init__(self, file_path="pattern.txt"):
-    self.particles = []
-    self.file_path = file_path
-    self.ensure_default_file()
-    self.load_targets_from_txt()
+    def __init__(self, file_path="pattern.txt"):
+        self.particles = []
+        self.file_path = file_path
+        self.ensure_default_file()
+        self.load_targets_from_txt()
 
-  def ensure_default_file(self):
-    if not os.path.exists(self.file_path):
-      default_pattern = (
-          "*****  ****    ***   *****  *   *\n"
-          "  *    *   *  *   *    *    **  *\n"
-          "  *    ****   *****    *    * * *\n"
-          "  *    *  *   *   *    *    *  **\n"
-          "  *    *   *  *   *  *****  *   *\n"
-      )
-      with open(self.file_path, "w", encoding="utf-8") as f:
-        f.write(default_pattern)
+    # Функция чтения файла
+    def ensure_default_file(self):
+        # Если файла нет, закидываем шаблон - слово 'train'
+        if not os.path.exists(self.file_path):
+            default_pattern = (
+                "*****  ****    ***   *****  *   *\n"
+                "  *    *   *  *   *    *    **  *\n"
+                "  *    ****   *****    *    * * *\n"
+                "  *    *  *   *   *    *    *  **\n"
+                "  *    *   *  *   *  *****  *   *\n"
+            )
+            with open(self.file_path, "w", encoding="utf-8") as f:
+                f.write(default_pattern)
 
-  def load_targets_from_txt(self):
-    with open(self.file_path, "r", encoding="utf-8") as f:
-      lines = f.readlines()
+    # Функция загрузки частиц из файла
+    def load_targets_from_txt(self):
+        with open(self.file_path, "r", encoding="utf-8") as f:
+            lines = f.readlines()
 
-    pixel_step = 14
-    max_cols = max(len(line.rstrip("\n")) for line in lines)
-    max_rows = len(lines)
+        pixel_step = 14
+        max_cols = max(len(line.rstrip("\n")) for line in lines)
+        max_rows = len(lines)
 
-    offset_x = (800 - (max_cols * pixel_step)) // 2
-    offset_y = (400 - (max_rows * pixel_step)) // 2
+        # Вычисление отступов, чтобы текст был по центру
+        offset_x = (800 - (max_cols * pixel_step)) // 2
+        offset_y = (400 - (max_rows * pixel_step)) // 2
 
-    for row_idx, line in enumerate(lines):
-      clean_line = line.rstrip("\r\n")
-      for col_idx, char in enumerate(clean_line):
-        if char != " ":
-          target_x = offset_x + col_idx * pixel_step
-          target_y = offset_y + row_idx * pixel_step
-          self.particles.append(Particle(target_x, target_y))
+        for row_idx, line in enumerate(lines):
+            clean_line = line.rstrip("\r\n")
+            for col_idx, char in enumerate(clean_line):
+                if char != " ":
+                    target_x = offset_x + col_idx * pixel_step
+                    target_y = offset_y + row_idx * pixel_step
+                    self.particles.append(Particle(target_x, target_y))
 
-  def update_particles(self, mouse_x, mouse_y):
-    for p in self.particles:
-      p.update(mouse_x, mouse_y)
+    def update_particles(self, mouse_x, mouse_y):
+        for p in self.particles:
+            p.update(mouse_x, mouse_y)
